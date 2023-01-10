@@ -37,9 +37,9 @@ contract kangeki_contract is ERC721A, Ownable {
     uint256 public preSaleSupply = 10;
     uint256 public maxMintAmount = 3;
     bool public paused = true;
-    bool public onlyAllowListed = true;
-    mapping(address => uint256) public allowListUserAmount;
-    mapping(address => uint256) public allowListMintedAmount;
+    bool public onlyAllowlisted = true;
+    mapping(address => uint256) public allowlistUserAmount;
+    mapping(address => uint256) public allowlistMintedAmount;
     
 
     constructor(
@@ -65,10 +65,10 @@ contract kangeki_contract is ERC721A, Ownable {
         // Owner also can mint.
         if (msg.sender != owner()) {
             require(msg.value >= cost * _mintAmount, "insufficient funds");
-            if(onlyAllowListed == true) {
-                require(allowListUserAmount[msg.sender] != 0, "user is not allowlisted");
-                require(allowListMintedAmount[msg.sender] + _mintAmount <= allowListUserAmount[msg.sender], "max NFT per address exceeded");
-                allowListMintedAmount[msg.sender] += _mintAmount;
+            if(onlyAllowlisted == true) {
+                require(allowlistUserAmount[msg.sender] != 0, "user is not allowlisted");
+                require(allowlistMintedAmount[msg.sender] + _mintAmount <= allowlistUserAmount[msg.sender], "max NFT per address exceeded");
+                allowlistMintedAmount[msg.sender] += _mintAmount;
             }
         }
 
@@ -89,10 +89,10 @@ contract kangeki_contract is ERC721A, Ownable {
         }
     }
 
-    function setAllowList(address[] memory addresses, uint256[] memory saleSupplies) public onlyOwner {
+    function setAllowlist(address[] memory addresses, uint256[] memory saleSupplies) public onlyOwner {
         require(addresses.length == saleSupplies.length);
         for (uint256 i = 0; i < addresses.length; i++) {
-            allowListUserAmount[addresses[i]] = saleSupplies[i];
+            allowlistUserAmount[addresses[i]] = saleSupplies[i];
         }
     }
 
@@ -106,8 +106,8 @@ contract kangeki_contract is ERC721A, Ownable {
         cost = _newCost;
     }
 
-    function setOnlyAllowListed(bool _state) public onlyOwner {
-        onlyAllowListed = _state;
+    function setOnlyAllowlisted(bool _state) public onlyOwner {
+        onlyAllowlisted = _state;
     }    
 
     function setpreSaleSupply(uint256 _newpreSaleSupply) public onlyOwner {
