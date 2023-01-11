@@ -319,7 +319,16 @@ function App() {
                       }}
                     >
                       {data.loading == true
-                        ? "読み込み中です。しばらくお待ちください。" : (data.paused == false ? ( data.onlyAllowlisted == true ? (data.allowlistUserAmount == 0 ? "接続したウォレットはアローリストに登録されていません。" : (data.allowlistUserAmount ==! data.allowlistMintedAmount ? (feedback + "あと" + (data.allowlistUserAmount - data.allowlistMintedAmount) + "枚ミントできます。") : "ミントの上限枚数に達しました" ) ) : feedback ) : "現在ミントは停止中です。")}
+                        ? "読み込み中です。しばらくお待ちください。"
+                        : (data.paused == false
+                          ? ( data.onlyAllowlisted == true
+                            ? (data.allowlistUserAmount == 0
+                              ? "接続したウォレットはアローリストに登録されていません。"
+                              : (data.allowlistUserAmount ==! data.allowlistMintedAmount
+                                ? (feedback + "あと" + (data.allowlistUserAmount - data.allowlistMintedAmount) + "枚ミントできます。")
+                                : "ミントの上限枚数に達しました" ) )
+                            : feedback )
+                          : "現在ミントは停止中です。")}
                     </s.TextDescription>
                     <s.SpacerMedium />
                     <s.Container ai={"center"} jc={"center"} fd={"row"}>
@@ -358,14 +367,34 @@ function App() {
                       <StyledButton
                         //1: disable
                         //0: able
-                        disabled = {claimingNft ? 1 : (data.paused == false ? ( data.onlyAllowlisted == true ? (data.allowlistUserAmount == 0 ? 1 : (data.allowlistUserAmount !== data.allowlistMintedAmount ? 0 : 1 ) ) : 0 ) : 1)}
+                        disabled = {claimingNft
+                                   ? 1
+                                   : (data.paused == false
+                                    ? ( data.onlyAllowlisted == true
+                                      ? (data.allowlistUserAmount == 0
+                                        ? 1
+                                        : (data.allowlistUserAmount !== data.allowlistMintedAmount
+                                          ? 0
+                                          : 1 ) )
+                                      : 0 )
+                                    : 1)}
                         onClick={(e) => {
                           e.preventDefault();
                           claimNFTs();
                           getData();
                         }}
                       >
-                        {claimingNft ? "読み込み中" : (data.paused == false ? ( data.onlyAllowlisted == true ? (data.allowlistUserAmount == 0 ? "STOP" : (data.allowlistUserAmount ==! data.allowlistMintedAmount ? "MINT" : "STOP" ) ) : "MINT" ) : "STOP")}
+                        {claimingNft
+                        ? "読み込み中"
+                        : (data.paused == false
+                          ? ( data.onlyAllowlisted == true
+                            ? (data.allowlistUserAmount == 0
+                              ? "STOP"
+                              : (data.allowlistUserAmount !== data.allowlistMintedAmount
+                                ? "MINT"
+                                : "STOP" ) )
+                            : "MINT" )
+                          : "STOP")}
                       </StyledButton>
                     </s.Container>
                   </>
