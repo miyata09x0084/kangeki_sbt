@@ -99,7 +99,7 @@ function App() {
   const blockchain = useSelector((state) => state.blockchain);
   const data = useSelector((state) => state.data);
   const [claimingNft, setClaimingNft] = useState(false);
-  const [feedback, setFeedback] = useState(`Click buy to mint your NFT.`);
+  const [feedback, setFeedback] = useState(`購入ボタンを押してミントしてください。`);
   const [mintAmount, setMintAmount] = useState(1);
   const [CONFIG, SET_CONFIG] = useState({
     CONTRACT_ADDRESS: "",
@@ -162,8 +162,8 @@ function App() {
 
   const incrementMintAmount = () => {
     let newMintAmount = mintAmount + 1;
-    if (newMintAmount > 10) {
-      newMintAmount = 10;
+    if (newMintAmount > 3) {
+      newMintAmount = 3;
     }
     setMintAmount(newMintAmount);
   };
@@ -192,6 +192,8 @@ function App() {
   useEffect(() => {
     getData();
   }, [blockchain.account]);
+
+  console.log(data.onlyAllowlisted)
 
   return (
     <s.Screen>
@@ -316,7 +318,8 @@ function App() {
                         color: "var(--accent-text)",
                       }}
                     >
-                      {feedback}
+                      {data.loading == true
+                        ? "読み込み中です。しばらくお待ちください。" : (data.paused == false ? ( data.onlyAllowlisted == true ? (data.allowlistUserAmount == 0 ? "接続したウォレットはアローリストに登録されていません。" : (data.allowlistUserAmount ==! data.allowlistMintedAmount ? (feedback + "あと" + (data.allowlistUserAmount - data.allowlistMintedAmount) + "枚ミントできます。") : "ミントの上限枚数に達しました" ) ) : feedback ) : "現在ミントは停止中です。")}
                     </s.TextDescription>
                     <s.SpacerMedium />
                     <s.Container ai={"center"} jc={"center"} fd={"row"}>
@@ -353,14 +356,16 @@ function App() {
                     <s.SpacerSmall />
                     <s.Container ai={"center"} jc={"center"} fd={"row"}>
                       <StyledButton
-                        disabled={claimingNft ? 1 : 0}
+                        //1: disable
+                        //0: able
+                        disabled = {claimingNft ? 1 : (data.paused == false ? ( data.onlyAllowlisted == true ? (data.allowlistUserAmount == 0 ? 1 : (data.allowlistUserAmount !== data.allowlistMintedAmount ? 0 : 1 ) ) : 0 ) : 1)}
                         onClick={(e) => {
                           e.preventDefault();
                           claimNFTs();
                           getData();
                         }}
                       >
-                        {claimingNft ? "BUSY" : "BUY"}
+                        {claimingNft ? "読み込み中" : (data.paused == false ? ( data.onlyAllowlisted == true ? (data.allowlistUserAmount == 0 ? "STOP" : (data.allowlistUserAmount ==! data.allowlistMintedAmount ? "MINT" : "STOP" ) ) : "MINT" ) : "STOP")}
                       </StyledButton>
                     </s.Container>
                   </>

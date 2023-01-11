@@ -34,6 +34,10 @@ export const fetchData = () => {
         .getState()
         .blockchain.smartContract.methods.paused()
         .call();
+      let onlyAllowlisted = await store
+        .getState()
+        .blockchain.smartContract.methods.onlyAllowlisted()
+        .call();
       let allowlistUserAmount = await store
         .getState()
         .blockchain.smartContract.methods.allowlistUserAmount(blockchain.account)
@@ -51,6 +55,7 @@ export const fetchData = () => {
         fetchDataSuccess({
           totalSupply,
           paused,
+          onlyAllowlisted,
           allowlistUserAmount,
           allowlistMintedAmount,
           // cost,
