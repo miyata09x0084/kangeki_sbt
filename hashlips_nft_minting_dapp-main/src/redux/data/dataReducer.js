@@ -5,6 +5,8 @@ const initialState = {
   error: false,
   errorMsg: "",
   paused: true,
+  allowlistUserAmount: 1,
+  allowlistMintedAmount: 0,
 };
 
 const dataReducer = (state = initialState, action) => {
@@ -23,6 +25,8 @@ const dataReducer = (state = initialState, action) => {
         totalSupply: action.payload.totalSupply,
         // cost: action.payload.cost,
         paused: action.payload.paused,
+        allowlistUserAmount: action.payload.allowlistUserAmount,
+        allowlistMintedAmount: action.payload.allowlistMintedAmount,
         error: false,
         errorMsg: "",
       };

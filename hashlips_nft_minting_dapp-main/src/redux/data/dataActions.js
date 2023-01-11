@@ -25,6 +25,7 @@ export const fetchData = () => {
   return async (dispatch) => {
     dispatch(fetchDataRequest());
     try {
+      const blockchain = store.getState().blockchain
       let totalSupply = await store
         .getState()
         .blockchain.smartContract.methods.totalSupply()
@@ -32,6 +33,14 @@ export const fetchData = () => {
       let paused = await store
         .getState()
         .blockchain.smartContract.methods.paused()
+        .call();
+      let allowlistUserAmount = await store
+        .getState()
+        .blockchain.smartContract.methods.allowlistUserAmount(blockchain.account)
+        .call();
+      let allowlistMintedAmount = await store
+        .getState()
+        .blockchain.smartContract.methods.allowlistMintedAmount(blockchain.account)
         .call();
       // let cost = await store
       //   .getState()
@@ -42,6 +51,8 @@ export const fetchData = () => {
         fetchDataSuccess({
           totalSupply,
           paused,
+          allowlistUserAmount,
+          allowlistMintedAmount,
           // cost,
         })
       );

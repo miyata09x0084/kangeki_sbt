@@ -193,8 +193,6 @@ function App() {
     getData();
   }, [blockchain.account]);
 
-  console.log(data.paused);
-
   return (
     <s.Screen>
       <s.Container
