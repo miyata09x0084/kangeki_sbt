@@ -145,7 +145,7 @@ function App() {
       .then((receipt) => {
         console.log(receipt);
         setFeedback(
-          `WOW, the ${CONFIG.NFT_NAME} is yours! go visit Opensea.io to view it.`
+          `${CONFIG.NFT_NAME} がミントできました。Opensea.ioで確認してみましょう。`
         );
         setClaimingNft(false);
         dispatch(fetchData(blockchain.account));
@@ -162,8 +162,18 @@ function App() {
 
   const incrementMintAmount = () => {
     let newMintAmount = mintAmount + 1;
-    if (newMintAmount > 3) {
-      newMintAmount = 3;
+    if (data.onlyAllowlisted == true) {
+      if (data.allowlistUserAmount !== 0) {
+        if (data.allowlistUserAmount > data.allowlistMintedAmount) {
+          newMintAmount = data.allowlistUserAmount - data.allowlistMintedAmount;
+        } else {
+          newMintAmount = 1;
+        }
+    }
+    } else {
+      if (newMintAmount > 3) {
+        newMintAmount = 3;
+      }
     }
     setMintAmount(newMintAmount);
   };
@@ -192,8 +202,6 @@ function App() {
   useEffect(() => {
     getData();
   }, [blockchain.account]);
-
-  console.log(data.onlyAllowlisted)
 
   return (
     <s.Screen>
@@ -324,7 +332,7 @@ function App() {
                           ? ( data.onlyAllowlisted == true
                             ? (data.allowlistUserAmount == 0
                               ? "接続したウォレットはアローリストに登録されていません。"
-                              : (data.allowlistUserAmount ==! data.allowlistMintedAmount
+                              : (data.allowlistUserAmount !== data.allowlistMintedAmount
                                 ? (feedback + "あと" + (data.allowlistUserAmount - data.allowlistMintedAmount) + "枚ミントできます。")
                                 : "ミントの上限枚数に達しました" ) )
                             : feedback )
