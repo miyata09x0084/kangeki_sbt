@@ -1,43 +1,46 @@
 # kangeki_sbt
 
-## 概要
+## Overview
 
-Web ブラウザから NFT を発行できる個人プロジェクト。発行された NFT は、Owner の操作で「譲渡不可」状態（= **SBT / SoulBound Token**）に切り替えることができる。
+A personal project that lets users mint NFTs from a web browser. Minted tokens can be switched by the owner into a **non-transferable** state — known as an **SBT (SoulBound Token)**.
 
-- **チェーン**: Polygon（Ethereum 互換の低手数料チェーン）
-- **発行方式**: Web dApp からミント（MetaMask 必須）、Allowlist（事前登録制）対応
-- **供給量**: 最大 40 個、価格 0.05 MATIC
+| Attribute | Value |
+|-----------|-------|
+| Chain     | Polygon (Ethereum-compatible, low-fee blockchain) |
+| Contract  | [`0xC49dB55Aea26f82e7c42b6A8c51a756E3a78A550`](https://polygonscan.com/token/0xc49db55aea26f82e7c42b6a8c51a756e3a78a550) |
+| Supply    | 40 max, 0.05 MATIC per mint |
+| Minting   | Web dApp (MetaMask + allowlist) |
 
-### ファイル構成
+| Directory | Role |
+|-----------|------|
+| `hashlips_nft_contract-main/`     | NFT smart contract (Solidity) |
+| `hashlips_nft_minting_dapp-main/` | Minting web frontend (React + Firebase Hosting) |
 
-- `hashlips_nft_contract-main/` — NFT のスマートコントラクト（Solidity）
-- `hashlips_nft_minting_dapp-main/` — ミント用の Web フロントエンド（React + Firebase Hosting）
+> Use cases: event attendance badges, community memberships, commemorative tokens — anywhere non-transferability is the point.
 
-コントラクトは Polygon 上にデプロイ済み: [`0xC49dB55Aea26f82e7c42b6A8c51a756E3a78A550`](https://polygonscan.com/token/0xc49db55aea26f82e7c42b6a8c51a756e3a78a550)
+## Steps
 
-> ユースケース: イベント参加証、会員バッジ、記念品など、譲渡不可であることに意味があるユースケースを想定。
+### Prerequisites
 
-## 手順
+| Tool         | Purpose |
+|--------------|---------|
+| Node.js 14+  | Run the dApp locally and build for production |
+| MetaMask     | Connect a wallet to the Polygon network |
+| Firebase CLI | Deploy the dApp to Firebase Hosting |
 
-### 前提
+### 1. Deploy the contract
 
-- Node.js 14+
-- MetaMask（Polygon ネットワーク接続済み）
-- Firebase CLI（本番デプロイする場合）
+The project assumes deployment via Remix IDE (no Hardhat / Truffle config is included).
 
-### 1. コントラクトのデプロイ
+1. Open [Remix IDE](https://remix.ethereum.org)
+2. Copy the contents of `hashlips_nft_contract-main/info/kangeki.sol` into a new file
+3. Compile with Solidity `>=0.7.0 <0.9.0`
+4. In "Deploy & Run Transactions", set Environment to `Injected Provider - MetaMask` and select the Polygon network
+5. Click Deploy
 
-Remix IDE 経由でのデプロイを想定（Hardhat/Truffle 設定はなし）。
+After deploying, update `CONTRACT_ADDRESS` in `hashlips_nft_minting_dapp-main/public/config/config.json` with the new address.
 
-1. [Remix IDE](https://remix.ethereum.org) を開く
-2. `hashlips_nft_contract-main/info/kangeki.sol` の内容をコピーして新規ファイルに貼り付け
-3. Solidity `>=0.7.0 <0.9.0` でコンパイル
-4. Environment を `Injected Provider - MetaMask` にして Polygon を選択
-5. Deploy を実行
-
-デプロイ後、`hashlips_nft_minting_dapp-main/public/config/config.json` の `CONTRACT_ADDRESS` を新しいアドレスに差し替える。
-
-### 2. dApp ローカル起動
+### 2. Run the dApp locally
 
 ```bash
 cd hashlips_nft_minting_dapp-main
@@ -45,9 +48,9 @@ npm install
 npm start
 ```
 
-http://localhost:3000 で動作確認。
+Open http://localhost:3000.
 
-### 3. 本番デプロイ（Firebase）
+### 3. Deploy to production (Firebase)
 
 ```bash
 cd hashlips_nft_minting_dapp-main
@@ -55,7 +58,7 @@ npm run build
 firebase deploy
 ```
 
-Firebase プロジェクト ID: `kangeki-dapps`
+Firebase project ID: `kangeki-dapps`
 
 ## Based on
 
